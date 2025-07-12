@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template_string
 import boto3
+import os
 import PyPDF2
 import io
 import json
@@ -9,12 +10,9 @@ from datetime import datetime
 app = Flask(__name__)
 
 # AWS SQS setup
-sqs = boto3.client('sqs',
-                   region_name='us-east-1',
-                   aws_access_key_id='AKIAYFRFK5RX5BLLDPLZ',
-                   aws_secret_access_key='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')  # 🔒 Consider using env vars
+sqs = boto3.client('sqs', region_name=os.environ.get('AWS_REGION', 'us-east-1')) 
 
-queue_url = 'https://sqs.us-east-1.amazonaws.com/561645284463/health-alert-queue'
+queue_url = os.environ.get('SQS_QUEUE_URL')
 
 UPLOAD_FORM = '''
 <head>
@@ -34,7 +32,7 @@ UPLOAD_FORM = '''
   <main class="container mx-auto mt-16 px-4">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto">
       <div class="mb-4 text-center">
-        <h2 class="text-2xl font-semibold mb-2">Analyze Your Medical Report</h2>
+        <h2 class="text-2xl font-semibold mb-2">Upload Your PDF Report</h2>
         <p class="text-sm text-gray-600">Your data is encrypted and stays confidential. Your health deserves attention, let’s get started!</p>
       </div>
 
@@ -209,6 +207,5 @@ def upload_pdf():
                 return f'Failed to send to SQS: {str(e)}', 500
 
     return render_template_string(UPLOAD_FORM)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
