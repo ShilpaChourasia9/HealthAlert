@@ -33,22 +33,23 @@ REPORT_FORM = '''
   <main class="container mx-auto mt-16 px-4">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto">
       <div class="mb-4 text-center">
-        <h2 class="text-2xl font-semibold mb-2">Choose a Report</h2>
+        <h2 class="text-2xl font-semibold mb-4">Analyze Your Health Report</h2>
+        <p class="text-sm text-gray-600 mb-6">Select a health report from the list below to view its summary and get personalized insights.</p>
         <form action="/" method="post" class="space-y-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Available Reports</label>
+            <label class="block text-base font-medium text-gray-800 mb-2">Select Report</label>
             <select name="selected_report" class="block w-full border border-gray-300 rounded-lg p-2">
               {% for report in reports %}
                 <option value="{{ report }}">{{ report }}</option>
               {% endfor %}
             </select>
             <div class="mt-4">
-              <h3 class="text-sm font-medium text-gray-700 mb-1">Preview Uploaded Reports</h3>
-              <div class="space-y-1">
+              <h3 class="text-sm font-medium text-gray-700 mb-2 mt-6">Need to review before analyzing? Preview your uploaded reports:</h3>
+              <ul class="list-disc pl-6 space-y-2 text-sm text-blue-700 mt-2">
               {% for report in reports %}
-                <a href="{{ signed_urls[report] }}" target="_blank" class="text-sm text-blue-600 hover:underline">🔍 Preview {{ report }}</a>
+                <li class="leading-relaxed"><a href="{{ signed_urls[report] }}" target="_blank" class="hover:underline">🔍 {{ report }}</a></li>
               {% endfor %}
-            </div>
+            </ul>
               </div>
           <div class="text-center">
             <input type="submit" value="Analyze Report" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-150" />
