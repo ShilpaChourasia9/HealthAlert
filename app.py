@@ -33,6 +33,7 @@ REPORT_FORM = '''
   <main class="container mx-auto mt-8 px-4 max-w-3xl">
     <div class="bg-white rounded-xl shadow-lg p-8 w-full">
       <div class="mb-4">
+        <p class="text-sm text-gray-700 mb-4"><strong>User:</strong> {{ user_name }}</p>
         <h2 class="text-2xl font-semibold mb-4">Analyze Your Health Report</h2>
         <p class="text-sm text-gray-600 mb-6">Select a health report from the list below to view its summary and get personalized insights.</p>
         <form action="/" method="post" class="space-y-6">
@@ -159,14 +160,17 @@ def select_report():
             sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(report))
             insights = generate_insights(report)
             HTML_RESULT_TEMPLATE = '''
-<div class="bg-white rounded-xl shadow-lg p-6 mt-8 max-w-xl mx-auto">
-  <h3 class="text-xl font-semibold mb-4">Analysis Summary</h3>
+<div class="bg-gradient-to-r from-blue-50 via-white to-green-50 border border-gray-200 rounded-xl shadow-xl p-6 mt-8 max-w-3xl mx-auto">
+  <h3 class="text-2xl font-bold text-blue-800 mb-4">🧾 Health Report Analysis</h3>
+  <div class="grid grid-cols-2 gap-4 text-sm text-gray-800">
   <p><strong>Patient ID:</strong> {{ report['patient_id'] }}</p>
   <p><strong>Test Type:</strong> {{ report['test_type'] }}</p>
   <p><strong>Value:</strong> {{ report['value'] }} {{ report['unit'] }}</p>
   <p><strong>Timestamp:</strong> {{ report['timestamp'] }}</p>
   <hr class="my-4">
-  <p class="text-lg font-semibold">Status: <span class="{{ 'text-red-600' if insights['status'] == 'Critical' else 'text-green-600' }}">{{ insights['status'] }}</span></p>
+  </div>
+  <div class="mt-4 p-4 rounded-lg {{ 'bg-red-100 border-l-4 border-red-500' if insights['status'] == 'Critical' else 'bg-green-100 border-l-4 border-green-500' }}">
+    <p class="text-lg font-semibold">Status: <span class="{{ 'text-red-600' if insights['status'] == 'Critical' else 'text-green-600' }}">{{ insights['status'] }}</span></p>
   <p class="mb-2">{{ insights['message'] }}</p>
   {% if insights['recommendation'] %}
     <h4 class="font-medium">Recommendations:</h4>
@@ -192,11 +196,11 @@ def select_report():
   {% endif %}
 </div>'''
             result_block = render_template_string(HTML_RESULT_TEMPLATE, report=report, insights=insights)
-            return render_template_string(REPORT_FORM, reports=reports, result_block=result_block, signed_urls=signed_urls)
+            return render_template_string(REPORT_FORM, reports=reports, result_block=result_block, signed_urls=signed_urls, user_name='John Doe')
         except Exception as e:
             return f'Failed to send to SQS: {str(e)}', 500
 
-    return render_template_string(REPORT_FORM, reports=reports, result_block='', signed_urls=signed_urls)
+    return render_template_string(REPORT_FORM, reports=reports, result_block='', signed_urls=signed_urls, user_name='John Doe')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
