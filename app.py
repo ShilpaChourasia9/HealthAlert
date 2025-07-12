@@ -27,7 +27,7 @@ REPORT_FORM = '''
   <header class="bg-blue-700 text-white p-6 shadow-md">
     <div class="container mx-auto flex flex-col items-center">
       <h1 class="text-4xl font-extrabold mb-1">SkyVitals Clinic App</h1>
-      <p class="text-lg font-light text-center">Select a report to analyze and receive personalized insights.</p>
+      <p class="text-lg font-light text-center">Quickly review and analyze your uploaded health reports — with instant insights and alerts.</p>
     </div>
   </header>
   <main class="container mx-auto mt-8 px-4 max-w-3xl">
