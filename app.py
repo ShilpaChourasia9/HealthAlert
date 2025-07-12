@@ -33,9 +33,10 @@ REPORT_FORM = '''
   <main class="container mx-auto mt-8 px-4 max-w-3xl">
     <div class="bg-white rounded-xl shadow-lg p-8 w-full">
       <div class="mb-4">
-        <p class="text-sm text-gray-700 mb-4"><strong>User:</strong> {{ user_name }}</p>
-        <h2 class="text-2xl font-semibold mb-4">Analyze Your Health Report</h2>
-        <p class="text-sm text-gray-600 mb-6">Select a health report from the list below to view its summary and get personalized insights.</p>
+        
+        <h2 class="text-2xl font-semibold mb-2">Analyze Your Health Report</h2>
+        <p class="text-sm text-gray-600 mb-2">
+        <span class="block text-sm text-gray-700 mb-2 italic">Welcome back, {{ user_name }}.</span>Select a health report from the list below to view its summary and get personalized insights.</p>
         <form action="/" method="post" class="space-y-6">
           <div>
             <label class="block text-base font-medium text-gray-800 mb-2">Select Report</label>
@@ -110,7 +111,7 @@ def generate_insights(report):
     test_type = report["test_type"].lower()
     value = report["value"]
 
-    if test_type == "hemoglobin" and value < 12:
+    if test_type == "hemoglobin" and value < 11:
         insights["status"] = "Critical"
         insights["message"] = "Your Hemoglobin level is below the normal threshold."
         insights["recommendation"] = [
@@ -169,12 +170,12 @@ def select_report():
   <p><strong>Timestamp:</strong> {{ report['timestamp'] }}</p>
   <hr class="my-4">
   </div>
-  <div class="mt-4 p-4 rounded-lg {{ 'bg-red-100 border-l-4 border-red-500' if insights['status'] == 'Critical' else 'bg-green-100 border-l-4 border-green-500' }}">
+  <div class="mt-4 p-4 rounded-lg {{ 'bg-orange-50 border-l-4 border-orange-300' if insights['status'] == 'Critical' else 'bg-green-50 border-l-4 border-green-400' }}">
     <p class="text-lg font-semibold">Status: <span class="{{ 'text-red-600' if insights['status'] == 'Critical' else 'text-green-600' }}">{{ insights['status'] }}</span></p>
   <p class="mb-2">{{ insights['message'] }}</p>
   {% if insights['recommendation'] %}
     <h4 class="font-medium">Recommendations:</h4>
-    <ul class="list-disc pl-6 text-sm text-gray-700">
+    <ul class="list-disc pl-6 text-sm text-gray-800">
       {% for rec in insights['recommendation'] %}
         <li>{{ rec }}</li>
       {% endfor %}
