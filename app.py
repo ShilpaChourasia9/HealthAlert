@@ -32,7 +32,7 @@ REPORT_FORM = '''
   </header>
   <main class="container mx-auto mt-16 px-4">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto">
-      <div class="mb-4 text-center">
+      <div class="mb-4">
         <h2 class="text-2xl font-semibold mb-4">Analyze Your Health Report</h2>
         <p class="text-sm text-gray-600 mb-6">Select a health report from the list below to view its summary and get personalized insights.</p>
         <form action="/" method="post" class="space-y-6">
@@ -51,7 +51,7 @@ REPORT_FORM = '''
               {% endfor %}
             </ul>
               </div>
-          <div class="text-center">
+          <div class="text-center mt-6">
             <input type="submit" value="Analyze Report" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-150" />
           </div>
         </form>
@@ -59,7 +59,7 @@ REPORT_FORM = '''
     </div>
     {{ result_block|safe }}
   </main>
-  <footer class="mt-12 text-center text-sm text-gray-500">
+  <footer class="mt-8 text-center text-sm text-gray-500 pb-6">
     &copy; 2025 SkyVitals Clinic. All rights reserved.
   </footer>
 </body>
