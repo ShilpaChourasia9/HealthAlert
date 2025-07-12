@@ -30,8 +30,8 @@ REPORT_FORM = '''
       <p class="text-lg font-light text-center">Select a report to analyze and receive personalized insights.</p>
     </div>
   </header>
-  <main class="container mx-auto mt-16 px-4">
-    <div class="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto">
+  <main class="container mx-auto mt-8 px-4 max-w-3xl">
+    <div class="bg-white rounded-xl shadow-lg p-8 w-full">
       <div class="mb-4">
         <h2 class="text-2xl font-semibold mb-4">Analyze Your Health Report</h2>
         <p class="text-sm text-gray-600 mb-6">Select a health report from the list below to view its summary and get personalized insights.</p>
@@ -175,6 +175,20 @@ def select_report():
         <li>{{ rec }}</li>
       {% endfor %}
     </ul>
+  {% endif %}
+  {% if insights['status'] == 'Critical' %}
+  <div class="mt-6 text-sm text-red-700">
+    <p class="font-semibold"><strong>Alert Sent:</strong> Your result is critical. A clinician has been notified via our health alert system.</p>
+    <div class="mt-4 text-gray-600">
+      <p><strong>What happens next?</strong></p>
+      <ul class="list-disc list-inside">
+        <li>A clinician will review your result.</li>
+        <li>If necessary, you'll be contacted shortly.</li>
+        <li>In case of symptoms, seek immediate care.</li>
+      </ul>
+      <p class="mt-2">Alert time: {{ report.timestamp }}</p>
+    </div>
+  </div>
   {% endif %}
 </div>'''
             result_block = render_template_string(HTML_RESULT_TEMPLATE, report=report, insights=insights)
