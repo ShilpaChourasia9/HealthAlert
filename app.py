@@ -139,12 +139,11 @@ def select_report():
 
     if request.method == 'POST':
         selected = request.form.get('selected_report')
-                try:
+        try:
             s3_obj = s3.get_object(Bucket=S3_BUCKET, Key=selected)
             file_bytes = s3_obj['Body'].read()
             reader = PyPDF2.PdfReader(io.BytesIO(file_bytes))
-                reader = PyPDF2.PdfReader(f)
-                text = ''.join(page.extract_text() for page in reader.pages if page.extract_text())
+                                text = ''.join(page.extract_text() for page in reader.pages if page.extract_text())
         except Exception as e:
             return f'Failed to read PDF: {str(e)}', 500
 
