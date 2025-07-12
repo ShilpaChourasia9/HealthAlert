@@ -42,12 +42,14 @@ REPORT_FORM = '''
                 <option value="{{ report }}">{{ report }}</option>
               {% endfor %}
             </select>
-            <div class="mt-2 text-right">
+            <div class="mt-4">
+              <h3 class="text-sm font-medium text-gray-700 mb-1">Preview Uploaded Reports</h3>
+              <div class="space-y-1">
               {% for report in reports %}
-                <a href="{{ signed_urls[report] }}" target="_blank" class="text-sm text-blue-600 hover:underline block">🔍 Preview {{ report }}</a>
+                <a href="{{ signed_urls[report] }}" target="_blank" class="text-sm text-blue-600 hover:underline">🔍 Preview {{ report }}</a>
               {% endfor %}
             </div>
-          </div>
+              </div>
           <div class="text-center">
             <input type="submit" value="Analyze Report" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-150" />
           </div>
@@ -155,7 +157,25 @@ def select_report():
         try:
             sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(report))
             insights = generate_insights(report)
-            HTML_RESULT_TEMPLATE = '''<div class="bg-white rounded-xl shadow-lg p-6 mt-8 max-w-xl mx-auto">...same as before...</div>'''
+            HTML_RESULT_TEMPLATE = '''
+<div class="bg-white rounded-xl shadow-lg p-6 mt-8 max-w-xl mx-auto">
+  <h3 class="text-xl font-semibold mb-4">Analysis Summary</h3>
+  <p><strong>Patient ID:</strong> {{ report['patient_id'] }}</p>
+  <p><strong>Test Type:</strong> {{ report['test_type'] }}</p>
+  <p><strong>Value:</strong> {{ report['value'] }} {{ report['unit'] }}</p>
+  <p><strong>Timestamp:</strong> {{ report['timestamp'] }}</p>
+  <hr class="my-4">
+  <p class="text-lg font-semibold">Status: <span class="{{ 'text-red-600' if insights['status'] == 'Critical' else 'text-green-600' }}">{{ insights['status'] }}</span></p>
+  <p class="mb-2">{{ insights['message'] }}</p>
+  {% if insights['recommendation'] %}
+    <h4 class="font-medium">Recommendations:</h4>
+    <ul class="list-disc pl-6 text-sm text-gray-700">
+      {% for rec in insights['recommendation'] %}
+        <li>{{ rec }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>'''
             result_block = render_template_string(HTML_RESULT_TEMPLATE, report=report, insights=insights)
             return render_template_string(REPORT_FORM, reports=reports, result_block=result_block, signed_urls=signed_urls)
         except Exception as e:
