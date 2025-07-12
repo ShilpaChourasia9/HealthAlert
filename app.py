@@ -129,7 +129,7 @@ def generate_insights(report):
 def select_report():
     from urllib.parse import quote
     from datetime import timedelta
-    from flask import Markup
+    from markupsafe import Markup
     response = s3.list_objects_v2(Bucket=S3_BUCKET, Prefix='')
     reports = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'].endswith('.pdf')]
     signed_urls = {
